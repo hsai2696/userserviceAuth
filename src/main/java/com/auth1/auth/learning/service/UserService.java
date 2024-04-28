@@ -43,18 +43,18 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        SendEmailMessageDto message = new SendEmailMessageDto();
-        message.setFrom("support@scaler.com");
-        message.setTo(email);
-        message.setSubject("Welcome to Scaler!");
-        message.setBody("Hey! Looking forward to have you on our platform.");
+SendEmailMessageDto message = new SendEmailMessageDto();
+message.setFrom("support@scaler.com");
+message.setTo(email);
+message.setSubject("Welcome to Scaler!");
+message.setBody("Hey! Looking forward to have you on our platform.");
 
         try {
-            kafkaTemplate.send(
-                    "sendEmail",
-                    objectMapper.writeValueAsString(message)
-            );
-        } catch (Exception e) {}
+kafkaTemplate.send(
+"sendEmail",
+objectMapper.writeValueAsString(message)
+);
+} catch (Exception e) {}
 
 
         return savedUser;
@@ -131,5 +131,10 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    public Boolean checkUserExists(String email){
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        return optionalUser.isPresent();
     }
 }
